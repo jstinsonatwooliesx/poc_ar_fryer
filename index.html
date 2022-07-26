@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>AR Fryer</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+        <script src="js/three/build/three.js"></script>
+        <script src="js/three/examples/js/loaders/GLTFLoader.js"></script>
+        <!-- <script src="js/three/examples/jsm/webxr/VRButton.js"></script> -->
+        <script src="js/three/examples/js/controls/OrbitControls.js"></script>
+        <script src="js/three/examples/js/controls/FirstPersonControls.js"></script>
+		<script type="module" >
+            import { ARButton } from './js/three/examples/jsm/webxr/ARButton.js';
+
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 1000 );
+
+			const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+			renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.xr.enabled = true;
+            document.body.appendChild( ARButton.createButton( renderer ) );
+			document.body.appendChild( renderer.domElement );
+            
+            const controls = new THREE.OrbitControls( camera, renderer.domElement );
+            controls.keys = {
+                LEFT: 'ArrowLeft', //left arrow
+                UP: 'ArrowUp', // up arrow
+                RIGHT: 'ArrowRight', // right arrow
+                BOTTOM: 'ArrowDown' // down arrow
+            }
+            controls.update();
+
+            // const fpcontrols = new THREE.FirstPersonControls( camera, renderer.domElement );
+            // fpcontrols.lookSpeed = 0.1;
+            // fpcontrols.movementSpeed = 5;
+            // var clock = new THREE.Clock(true);
+
+            const ambLight = new THREE.AmbientLight(0x404040, 1);
+            scene.add(ambLight);
+
+            var shelf;
+            try {
+            const loader = new THREE.GLTFLoader(); 
+            loader.load( './scene.gltf', 
+                function ( gltf ) { 
+                    shelf = gltf.scene;
+                    shelf.position.x = -0.6;
+                    shelf.position.y = .2;
+                    shelf.position.z = -2;
+                    scene.add( shelf ); 
+                }, 
+                undefined, 
+                function ( error ) { 
+                    console.error( error ); 
+                }
+            );
+
+            loader.load();
+            } catch(e) {
+
+            }
+
+            const light = new THREE.AmbientLight( 0xffffff );
+            scene.add( light )
+
+			camera.position.z = 5;
+
+			function animate() {
+				requestAnimationFrame( animate );
+
+                // if (shelf) {
+                //     shelf.rotation.y += 0.01;
+                // }
+
+                controls.update();
+                //fpcontrols.update(clock.getDelta());
+				renderer.render( scene, camera );
+			};
+            animate();
+
+            renderer.setAnimationLoop( function () {
+                renderer.render( scene, camera );
+            });
+		</script>
+	</body>
+</html>
