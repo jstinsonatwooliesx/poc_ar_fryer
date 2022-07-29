@@ -5,9 +5,18 @@
 		<title>AR Fryer</title>
 		<style>
 			body { margin: 0; }
+            #spinner {
+                position: absolute;
+                left: 50%;
+                top:30%;
+                margin-left: -25px;
+                width:50px;
+                height:50px;
+            }
 		</style>
 	</head>
 	<body>
+        <div id="spinner"><img src="./spinner.gif" width="50" height="50" /></div>
         <script src="js/three/build/three.js"></script>
         <script src="js/three/examples/js/loaders/GLTFLoader.js"></script>
         <!-- <script src="js/three/examples/jsm/webxr/VRButton.js"></script> -->
@@ -15,6 +24,7 @@
         <script src="js/three/examples/js/controls/FirstPersonControls.js"></script>
 		<script type="module" >
             import { ARButton } from './js/three/examples/jsm/webxr/ARButton.js';
+            const spinner = document.getElementById("spinner");
 
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -60,7 +70,8 @@
                         modelScene.position.z = -2;
                         modelScene.position.y = -0.2;
                     } );
-                    // hide spinner
+
+                    spinner.style.display = "none";
                 }, 
                 undefined, 
                 function ( error ) { 
